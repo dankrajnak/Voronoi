@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Voronoi Diagram</title>
+    <script type="text/javascript" src="VPoint.js"></script>
+    <script type="text/javascript" src="VParabola.js"></script>
+    <script type="text/javascript" src="VEvent.js"></script>
+    <script type="text/javascript" src="VQueue.js"></script>
+    <script type="text/javascript" src="VTree.js"></script>
+    <script type="text/javascript" src="Voronoi.js"></script>
+    <script type="text/javascript" src="p5.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var slope;
+    var pointa = new VPoint(200, 100);
+    var pointb = new VPoint(300, 300);
+    var goingRight = true;
+
+    function setup(){
+        createCanvas(window.width, window.height);
+        slope = (pointb.y-pointa.y)/(pointb.x-pointa.x);
+        if(!goingRight) slope = -slope;
+        if(pointb.x < pointa.x) slope = -slope;
+        console.log(slope);
+    }
+
+    function draw(){
+        stroke(255);
+        ellipse(pointa.x, pointa.y, pointb.x, pointb.y);
+    }
+
+    var v = new Voronoi();
+    var sites = [];
+    var vqueue = new Vqueue();
+    for (i = 0; i < 20; i++) {
+        var parabola = new VParabola(new VPoint(3, 3));
+       // console.log(parabola.id);
+        var point = new VPoint(Math.random() * 19 + 1, i);
+        var event = new VEvent(true);
+        event.point = point;
+        vqueue.push(event);
+    }
+
+/*
+    while(vqueue.length() > 0){
+        console.log(vqueue.pop().point.x);
+    }*/
+
+
+</script>
+
+</body>
+</html>
