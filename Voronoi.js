@@ -21,7 +21,7 @@ function Voronoi(){
     this.edges = [];
 
     this.beachLine = new VTree();
-    this.sweepLine = 0;
+    this.sweepLine = 0; //TODO find where to update this.
 
 }
 
@@ -70,8 +70,8 @@ Voronoi.prototype.insertParabola = function(point){
 
 
     var parabIntersection = new VPoint(point.x, parabolaUnderSite.calculateParabY(point.x, this.sweepLine));
-    var edgeLeft = new VEdge(parabIntersection, a, b);
-    var edgeRight = new VEdge(parabIntersection, b, c);
+    var edgeLeft = new VEdge(parabIntersection, a, b); //TODO add going right
+    var edgeRight = new VEdge(parabIntersection, b, c); //TODO add going right
 
     a.edgeLeft = parabolaUnderSite.edgeLeft;
     a.edgeRight = edgeLeft;
@@ -102,8 +102,21 @@ Voronoi.prototype.checkCircleEvent = function(parabola){
 
     if(arcOnLeft == null || arcOnRight == null || arcOnLeft.site == arcOnRight.site) return;
 
-    //start point
+    var startPoint = parabola.edgeLeft.findIntersection(parabola.edgeRight);
 
+    if(startPoint.y < parabola.edgeRight.start.y && startPoint.y < parabola.edgeLeft.start.y) return;
+
+    var radius = VPoint.prototype.distance(startPoint, parabola.start);
+
+    if(startPoint.y + radius < this.sweepLine) return;
+    var circleEvent = new VEvent(false);
+
+    circleEvent.parabola  = p;
+    circleEvent.y = startPoint.y +radius;
+
+    this.eventQueue.push(circleEvent);
+
+    return;
 };
 
 Voronoi.prototype.finishEdge = function(){
